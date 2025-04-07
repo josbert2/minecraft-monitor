@@ -3,11 +3,5 @@
       "api/check.js": {
         "runtime": "nodejs18.x"
       }
-    },
-    "crons": [
-      {
-        "path": "/api/check",
-        "schedule": "*/5 * * * *"
-      }
-    ]
+    }
   }
