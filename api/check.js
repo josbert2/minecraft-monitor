@@ -2,15 +2,39 @@ import { status } from 'minecraft-server-util';
 
 const IP = 'perfumaditosmod.aternos.me';
 const PORT = 52932;
-const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1358919456671273041/wy8r36DE4HkcOSMKVOplXOfMoFcHc5yRsUMj2MEsecKD-MW865uGu7-FDAN3pxxIS9Fp';
+const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1358919456671273041/wy8r36DE4HkcOSMKVOplXOfMoFcHc5yRsUMj2MEsecKD-MW865uGu7-FDAN3pxxIS9Fp'; // tu webhook
+const JSONBIN_ID = '67f44cedce7767792747c1ed'; // tu bin ID
+const JSONBIN_API_KEY = '$2a$10$0zFzasZmz.2d5uz3HEPfse8KQxAyuDaYd3Woxhuf11wpfdpmSKZae'; // tu API Key
 
 export default async function handler(req, res) {
+  let lastStatus = null;
+
+  // 1. Obtener último estado
   try {
-    const response = await status(IP, PORT);
-    await notifyDiscord('✅ ¡El servidor de Minecraft está ONLINE!');
-    return res.status(200).json({ status: 'online', players: response.players.online });
+    const resp = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+      headers: {
+        'X-Master-Key': JSONBIN_API_KEY
+      }
+    });
+    const json = await resp.json();
+    lastStatus = json.record?.status;
   } catch (err) {
-    await notifyDiscord('🔴 El servidor de Minecraft está OFFLINE.');
+    console.error('Error al leer último estado:', err);
+  }
+
+  // 2. Verificar estado actual
+  try {
+    const data = await status(IP, PORT);
+    if (lastStatus !== 'online') {
+      await notifyDiscord('✅ ¡El servidor de Minecraft está ONLINE!');
+      await updateStatus('online');
+    }
+    return res.status(200).json({ status: 'online', players: data.players.online });
+  } catch (err) {
+    if (lastStatus !== 'offline') {
+      await notifyDiscord('🔴 El servidor de Minecraft está OFFLINE.');
+      await updateStatus('offline');
+    }
     return res.status(200).json({ status: 'offline' });
   }
 }
@@ -20,5 +44,16 @@ async function notifyDiscord(message) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ content: message })
+  });
+}
+
+async function updateStatus(status) {
+  await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Master-Key': JSONBIN_API_KEY
+    },
+    body: JSON.stringify({ status })
   });
 }
