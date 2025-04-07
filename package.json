@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "minecraft-server-util": "^5.4.4"
+    "minecraft-server-util": "^5.4.4",
+    "node-fetch": "^3.3.2"
   }
 }
