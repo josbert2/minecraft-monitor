@@ -4,7 +4,7 @@ const IP = 'perfumaditosmod.aternos.me';
 const PORT = 52932;
 const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1358919456671273041/wy8r36DE4HkcOSMKVOplXOfMoFcHc5yRsUMj2MEsecKD-MW865uGu7-FDAN3pxxIS9Fp'; // tu webhook
 const JSONBIN_ID = '67f44e388561e97a50fa97b5'; // tu bin ID
-const JSONBIN_API_KEY = '$2a$10$0zFzasZmz.2d5uz3HEPfse8KQxAyuDaYd3Woxhuf11wpfdpmSKZae'; // tu API Key
+const JSONBIN_API_KEY = '$2a$10$IlQlYI4fYW26QU2eaybZnOyRUGsJEnrMyWdUV13WvTYykQ.Y64UKm'; // tu API Key
 
 export default async function handler(req, res) {
   let lastStatus = null;
