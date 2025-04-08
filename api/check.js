@@ -40,10 +40,21 @@ export default async function handler(req, res) {
 }
 
 async function notifyDiscord(message) {
+  const content = `
+━━━━━━━━━━━━━━━━━━━━
+🎮 **Estado del servidor de Minecraft**
+📡 IP: \`${IP}:${PORT}\`
+
+${message}
+
+🕒 Hora: ${new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' })}
+━━━━━━━━━━━━━━━━━━━━
+`;
+
   await fetch(DISCORD_WEBHOOK_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content: message })
+    body: JSON.stringify({ content })
   });
 }
 
